@@ -19,7 +19,7 @@ jobs:
 
     - name: build with pyinstaller
       run: |
-        pyinstaller --onefile main.py
+        pyinstaller --onefile interpreter.py
 
     - uses: actions/upload-artifact@v2
       with:
@@ -43,7 +43,7 @@ jobs:
 
     - name: build with pyinstaller
       run: |
-        pyinstaller --onefile main.py
+        pyinstaller --onefile interpreter.py
 
     - uses: actions/upload-artifact@v2
       with:
@@ -67,7 +67,7 @@ jobs:
 
     - name: build with pyinstaller
       run: |
-        pyinstaller --onefile main.py
+        pyinstaller --onefile interpreter.py
 
     - uses: actions/upload-artifact@v2
       with:
