@@ -18,9 +18,15 @@ if not os.path.isfile("params.json"):
         }
 
     json_object = json.dumps(params, indent=2)
- 
-    with open(f"params.json", "w") as outfile:
-        outfile.write(json_object)
+    try:
+        with open(f"params.json", "w") as outfile:
+            outfile.write(json_object)
+    except IOError as e:
+        # Обработка исключения IOError (включая [Errno 30] Read-only file system)
+        if e.errno == 30:
+            print("Error: The file system is read-only.")
+        else:
+            print(f"An I/O error has occurred: {e}")
 else:
     with open(f'params.json', 'r') as openfile:
         params = json.load(openfile)
