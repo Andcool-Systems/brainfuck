@@ -1,6 +1,6 @@
 # Python BrainFuck interpreter
 [![wakatime](https://wakatime.com/badge/user/391a38bf-e366-4a08-8107-7e6a23ad440a/project/b974b541-44fa-4d2d-b985-85a73db7f627.svg)](https://wakatime.com/badge/user/391a38bf-e366-4a08-8107-7e6a23ad440a/project/b974b541-44fa-4d2d-b985-85a73db7f627)
-Интерпретатор языка BrainFuck, написанный на языке Python
+<br>Интерпретатор языка BrainFuck, написанный на языке Python
 
 ## Использование
 Для запуска вам не нужны сторонние модули, что бы запустить .bf скрипт просто выполните в консоли следующую команду:
