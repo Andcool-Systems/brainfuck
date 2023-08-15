@@ -42,11 +42,9 @@ scriptMid = mainFile.read()
 script = ''.join(char for char in scriptMid if char in "><+-.*,[]")
 #---------------------------------------------------------
 
-
 memory = [0] * (1 if params["memoryManagement"] == "AUTO" else int(params["memorySize"]))
 pointer = 0
 globalInterpreter = 0
-
 
 #---------------------------------------------------------
 opened = []
@@ -60,33 +58,36 @@ for i, char in enumerate(script):
         blocksOfCode[startIndex] = i
 #---------------------------------------------------------
 
-
 while globalInterpreter < len(script):
     char = script[globalInterpreter]
     try:
-        if char == ">": 
-            pointer += 1
-            if params["memoryManagement"] == "AUTO":
-                while pointer > len(memory) - 1:
-                    memory.append(0)
-            elif params["memoryManagement"] == "JUMP":
-                if pointer > len(memory) - 1: pointer = 0
-        if char == "<": 
-            pointer -= 1
-            if params["memoryManagement"] == "JUMP":
-                if pointer < 0: pointer = len(memory) - 1
-        if char == "+": memory[pointer] += 1
-        if char == "-": memory[pointer] -= 1
-        if char == ".": print(chr(memory[pointer]), end="")
-        if char == "*": print(memory[pointer], end="")
-        if char == ",": 
-            sym = input("Input=")
-            memory[pointer] = int(sym) if sym else 0
-        if char == "[": 
-            if memory[pointer] == 0: globalInterpreter = blocksOfCode[globalInterpreter]
-        if char == "]": 
-            if memory[pointer] != 0: globalInterpreter = blocksOfCode[globalInterpreter]
+        match char:
+            case ">": 
+                pointer += 1
+                if params["memoryManagement"] == "AUTO":
+                    while pointer > len(memory) - 1:
+                        memory.append(0)
+                        if len(memory) > int(params["memorySize"]) and int(params["memorySize"]) != -1:
+                            print(f'\n\nUnable to allocate memory: The allocated memory limit has been reached.\nTo remove the limit, set the "memorySize" parameter to -1')
+                            sys.exit()
+                elif params["memoryManagement"] == "JUMP":
+                    if pointer > len(memory) - 1: pointer = 0
+            case "<": 
+                pointer -= 1
+                if params["memoryManagement"] == "JUMP":
+                    if pointer < 0: pointer = len(memory) - 1
+            case "+": memory[pointer] += 1
+            case "-": memory[pointer] -= 1
+            case ".": print(chr(memory[pointer]), end="")
+            case "*": print(memory[pointer], end="")
+            case ",": 
+                sym = input("Input=")
+                memory[pointer] = int(sym) if sym else 0
+            case "[": 
+                if memory[pointer] == 0: globalInterpreter = blocksOfCode[globalInterpreter]
+            case "]": 
+                if memory[pointer] != 0: globalInterpreter = blocksOfCode[globalInterpreter]
     except IndexError: 
-        print(f'\n\nAllocated memory overflow on operator "{char}" on index {globalInterpreter}\nMemory index {pointer} on max {len(memory)-1}')
-        break
+        print(f'\n\nAllocated memory overflow on operator "{char}" on index {globalInterpreter}\nMemory index {pointer} on max {len(memory)-1}\nSet memoryManagement to "AUTO"')
+        sys.exit()
     globalInterpreter += 1
