@@ -74,8 +74,11 @@ while globalInterpreter < len(script):
                     if pointer < 0: pointer = len(memory) - 1
             case "+": memory[pointer] += 1
             case "-": memory[pointer] -= 1
-            case ".": 
-                print((chr(memory[pointer]) if lastChar != "*" else memory[pointer]), end="")
+            case ".":
+                try: print((chr(memory[pointer]) if lastChar != "*" else memory[pointer]), end="")
+                except ValueError: 
+                    print(f"\n\nAttempt to display incorrect unicode {memory[pointer]} at position {globalInterpreter + 2}")
+                    sys.exit()
             case ",": 
                 sym = input("Input=")
                 memory[pointer] = (int(sym) if sym else 0) if lastChar != "*" else (ord(int(sym) if sym else 0))
@@ -92,7 +95,8 @@ while globalInterpreter < len(script):
                 except KeyError: 
                     print(f'\n\nCannot find goto exit named "{nextChar}"')
                     sys.exit()
+            case "0": memory[pointer] = 0
     except IndexError: 
-        print(f'\n\nAllocated memory overflow on operator "{char}" on index {globalInterpreter + 1}\nMemory index {pointer} on max {len(memory)-1}\nSet memoryManagement to "AUTO"')
+        print(f'\n\nAllocated memory overflow on operator "{char}" on index {globalInterpreter + 2}\nMemory index {pointer} on max {len(memory)-1}\nSet memoryManagement to "AUTO"')
         sys.exit()
     globalInterpreter += 1

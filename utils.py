@@ -33,7 +33,11 @@ def init(code):
             blocksOfCode[i] = opened[-1]
             startIndex = opened.pop()
             blocksOfCode[startIndex] = i
-        if char == "G": portals[code[i + 1]] = i + 1
+        if char == "G": 
+            if code[i + 1] in portals: 
+                print(f"Can't create more than one output from goto\nGoto name '{code[i + 1]}' on index {i + 1}")
+                sys.exit()
+            portals[code[i + 1]] = i + 1
 
     if opened:
         print(f"Operator '[' on index {opened[0] + 1} opened, but not closed.")
