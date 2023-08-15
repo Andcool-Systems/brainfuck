@@ -1,6 +1,7 @@
 import sys
 import json
 import os
+import utils
 
 #------------------Имя файла-------------------------------
 filename = "file.bf"
@@ -39,7 +40,7 @@ except FileNotFoundError:
     print("No such file or directory")
     sys.exit()
 scriptMid = mainFile.read()
-script = ''.join(char for char in scriptMid if char in "><+-.*,[]")
+script = utils.formatCode(scriptMid)
 #---------------------------------------------------------
 
 memory = [0] * (1 if params["memoryManagement"] == "AUTO" else int(params["memorySize"]))
@@ -47,26 +48,14 @@ pointer = 0
 globalInterpreter = 0
 
 #---------------------------------------------------------
-opened = []
-blocksOfCode = {}
-for i, char in enumerate(script):
-    if char == "[":
-        opened.append(i)
-    if char == "]":
-        if not opened:
-            print(f"Cannot find operator '[' for operator ']' at index {i + 1}")
-            sys.exit()
-        blocksOfCode[i] = opened[-1]
-        startIndex = opened.pop()
-        blocksOfCode[startIndex] = i
-
-if opened:
-    print(f"Operator '[' on index {opened[0] + 1} opened, but not closed.")
-    sys.exit()
+blocksOfCode, portals = utils.init(script)
+clipboard = 0
 #---------------------------------------------------------
-
 while globalInterpreter < len(script):
     char = script[globalInterpreter]
+    lastChar = script[globalInterpreter - 1] if globalInterpreter > 1 else ""
+    nextChar = script[globalInterpreter + 1] if globalInterpreter < len(script) - 1 else ""
+
     try:
         match char:
             case ">": 
@@ -85,15 +74,24 @@ while globalInterpreter < len(script):
                     if pointer < 0: pointer = len(memory) - 1
             case "+": memory[pointer] += 1
             case "-": memory[pointer] -= 1
-            case ".": print(chr(memory[pointer]), end="")
-            case "*": print(memory[pointer], end="")
+            case ".": 
+                print((chr(memory[pointer]) if lastChar != "*" else memory[pointer]), end="")
             case ",": 
                 sym = input("Input=")
-                memory[pointer] = int(sym) if sym else 0
+                memory[pointer] = (int(sym) if sym else 0) if lastChar != "*" else (ord(int(sym) if sym else 0))
             case "[": 
                 if memory[pointer] == 0: globalInterpreter = blocksOfCode[globalInterpreter]
             case "]": 
                 if memory[pointer] != 0: globalInterpreter = blocksOfCode[globalInterpreter]
+            case "c": clipboard = memory[pointer]
+            case "p": memory[pointer] = clipboard
+            case "'": print("   ", end="")
+            case '"': print("")
+            case "g": 
+                try: globalInterpreter = portals[nextChar]
+                except KeyError: 
+                    print(f'\n\nCannot find goto exit named "{nextChar}"')
+                    sys.exit()
     except IndexError: 
         print(f'\n\nAllocated memory overflow on operator "{char}" on index {globalInterpreter + 1}\nMemory index {pointer} on max {len(memory)-1}\nSet memoryManagement to "AUTO"')
         sys.exit()
