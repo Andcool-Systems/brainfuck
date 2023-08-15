@@ -3,7 +3,7 @@ import json
 import os
 
 #------------------Имя файла-------------------------------
-filename = "main.bf"
+filename = "file.bf"
 for i, param in enumerate(sys.argv):
     if i == 1: 
         filename = str(param)
@@ -53,9 +53,16 @@ for i, char in enumerate(script):
     if char == "[":
         opened.append(i)
     if char == "]":
+        if not opened:
+            print(f"Cannot find operator '[' for operator ']' at index {i + 1}")
+            sys.exit()
         blocksOfCode[i] = opened[-1]
         startIndex = opened.pop()
         blocksOfCode[startIndex] = i
+
+if opened:
+    print(f"Operator '[' on index {opened[0] + 1} opened, but not closed.")
+    sys.exit()
 #---------------------------------------------------------
 
 while globalInterpreter < len(script):
@@ -88,6 +95,6 @@ while globalInterpreter < len(script):
             case "]": 
                 if memory[pointer] != 0: globalInterpreter = blocksOfCode[globalInterpreter]
     except IndexError: 
-        print(f'\n\nAllocated memory overflow on operator "{char}" on index {globalInterpreter}\nMemory index {pointer} on max {len(memory)-1}\nSet memoryManagement to "AUTO"')
+        print(f'\n\nAllocated memory overflow on operator "{char}" on index {globalInterpreter + 1}\nMemory index {pointer} on max {len(memory)-1}\nSet memoryManagement to "AUTO"')
         sys.exit()
     globalInterpreter += 1
