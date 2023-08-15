@@ -1,4 +1,4 @@
 /file.bf
 /params.json
 /build
-/__pycache__
+__pycache__/
