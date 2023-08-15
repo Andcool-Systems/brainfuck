@@ -35,7 +35,7 @@ else:
 
 #-------------------Открываем-------------------------------
 try:
-    mainFile = open(str(filename), "r", encoding="ascii")
+    mainFile = open(str(filename), "r", encoding="utf-8")
 except FileNotFoundError:
     print("No such file or directory")
     sys.exit()
