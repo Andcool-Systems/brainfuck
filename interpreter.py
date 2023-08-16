@@ -15,7 +15,8 @@ for i, param in enumerate(sys.argv):
 if not os.path.isfile("params.json"):
     params = {
         "memorySize": 30000, 
-        "memoryManagement": "OFF" #OFF/AUTO/JUMP
+        "memoryManagement": "OFF", #OFF/AUTO/JUMP
+        "type": "CLASSIC" #CLASSIC/ADVANCED
         }
 
     json_object = json.dumps(params, indent=2)
@@ -72,8 +73,12 @@ while globalInterpreter < len(script):
                 pointer -= 1
                 if params["memoryManagement"] == "JUMP":
                     if pointer < 0: pointer = len(memory) - 1
-            case "+": memory[pointer] += 1
-            case "-": memory[pointer] -= 1
+            case "+": 
+                memory[pointer] += 1
+                if params["type"] == "CLASSIC" and memory[pointer] > 255: memory[pointer] = 0
+            case "-": 
+                memory[pointer] -= 1
+                if params["type"] == "CLASSIC" and memory[pointer] < 0: memory[pointer] = 255
             case ".":
                 try: print((chr(memory[pointer]) if lastChar != "*" else memory[pointer]), end="")
                 except ValueError: 
