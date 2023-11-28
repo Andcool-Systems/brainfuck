@@ -6,10 +6,23 @@
 
 ## Использование
 Для запуска вам не нужны сторонние модули, что бы запустить .bf скрипт просто выполните в консоли следующую команду:
-> python interpreter.py main.bf
+```bash
+python interpreter.py main.bf
+```
 
 Для запуска уже собранного интерпретатора просто укажите имя файла интерпретатора, а после имя файла со скриптом BrainFuckA:
-> interpreter main.bf
+
+- В Windows:
+```bash
+./interpreter.exe main.bf
+```
+
+- В Linux/Unix:
+```bash
+./interpreter main.bf
+```
+
+> Если вы видите ошибку `permission denied: ./interpreter` при запуске в Linux, то назначьте файл исполняемым командой `sudo chmod +x interpreter`
 
 После названия скрипта интерпретатора идёт название файла со скриптом brainfuck.
 Поддерживаемые расширения файлов: 
