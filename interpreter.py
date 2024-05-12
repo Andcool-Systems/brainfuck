@@ -22,6 +22,7 @@ def format(script, filename):
         f.write(char)
     f.close()
 
+
 def formatCode(code):
     ignore = [" ", "\n", "	", "	"]
     code1 = "".join([char for char in code if not char in ignore])
@@ -39,6 +40,7 @@ def formatCode(code):
     clearCode = "".join(clearCodeList)
 
     return clearCode
+
 
 def init(code):
     opened = []
@@ -76,8 +78,8 @@ for i, param in enumerate(sys.argv):
         if not filename.split(".")[-1] in ["b", "bf"]:
             print(f"File '{filename}' is not a brainfuck script")
             sys.exit()
-    if i == 2 and param == "format": formatBF = True
-        
+    if i == 2 and param == "format": formatBF = True   
+
 #------------------Парсим аргументы------------------------
 if not os.path.isfile("params.json"):
     params = {
@@ -100,7 +102,6 @@ else:
     with open(f'params.json', 'r') as openfile:
         params = json.load(openfile)
 
-
 #-------------------Открываем-------------------------------
 try:
     mainFile = open(str(filename), "r", encoding="utf-8")
@@ -121,6 +122,7 @@ globalInterpreter = 0
 blocksOfCode, portals = init(script)
 clipboard = 0
 #---------------------------------------------------------
+
 while globalInterpreter < len(script):
     char = script[globalInterpreter]
     lastChar = script[globalInterpreter - 1] if globalInterpreter > 1 else ""
@@ -155,7 +157,7 @@ while globalInterpreter < len(script):
                     sys.exit()
             case ",": 
                 sym = input("Input=")
-                memory[pointer] = (int(sym) if sym else 0) if lastChar != "*" else (ord(int(sym) if sym else 0))
+                memory[pointer] = (int(sym) if sym else 0) if lastChar != "*" else (ord(int(sym[0]) if sym else 0))
             case "[": 
                 if memory[pointer] == 0: globalInterpreter = blocksOfCode[globalInterpreter]
             case "]": 
